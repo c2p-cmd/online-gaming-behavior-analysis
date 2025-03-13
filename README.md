@@ -10,6 +10,8 @@
 
 This project analyzes player engagement in online gaming through machine learning classification techniques. Using a dataset of 40,000+ players, it identifies key factors that influence engagement levels and builds predictive models to classify player engagement.
 
+[CHECK IT OUT 🚀](https://c2p-cmd.github.io/online-gaming-behavior-analysis/)
+
 ## 🎯 Objectives
 
 - Explore and analyze factors influencing online gaming engagement
