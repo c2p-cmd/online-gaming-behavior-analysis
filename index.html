@@ -7518,6 +7518,8 @@ a.anchor-link {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h1 id="Online-Gaming-Behavior-ML-Project">Online Gaming Behavior ML Project<a class="anchor-link" href="#Online-Gaming-Behavior-ML-Project">¶</a></h1><p>Welcome to the Online Gaming Behavior Machine Learning Project! This project aims to analyze and predict player engagement levels in online gaming using various machine learning techniques. By leveraging a comprehensive dataset of player behaviors, we will explore key factors that influence engagement and build robust models to classify engagement levels.</p>
+<h2 id="Motivation:">Motivation:<a class="anchor-link" href="#Motivation:">¶</a></h2><p>The gaming industry faces significant challenges in player retention and sustainable engagement. With development costs rising and competition intensifying, game publishers need insights to make strategic decisions. This project aims to help game publishers make better decisions in their game development strategy by identifying the key factors that drive player engagement.</p>
+<p>By understanding which elements most strongly correlate with high engagement, developers can design more compelling experiences, and maintain a healthy balance between monetization and player satisfaction. Our machine learning approach provides metrics that can guide feature prioritization and help maintain player loyalty.</p>
 <p>Throughout this notebook, we will perform data preprocessing, exploratory data analysis (EDA), feature engineering, and model training. We will also evaluate the performance of different machine learning models and fine-tune the best-performing model to achieve optimal results.</p>
 <p>Let's dive into the fascinating world of online gaming behavior and uncover valuable insights to enhance player engagement!</p>
 </div>
@@ -7876,6 +7878,24 @@ dtype: int64</pre>
 </div>
 </div>
 </div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>I will be splitting the age into 4 categories:</p>
+<ul>
+<li>10-19</li>
+<li>20-29</li>
+<li>30-39</li>
+<li>40-49</li>
+</ul>
+<p>This will be easier to visualize</p>
+</div>
+</div>
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -7898,16 +7918,18 @@ dtype: int64</pre>
 <span class="c1"># Create binned age distribution</span>
 <span class="n">age_counts</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'AgeBin'</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
 <span class="n">age_counts</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Age Group'</span><span class="p">,</span> <span class="s1">'Count'</span><span class="p">]</span>
+<span class="n">age_counts</span><span class="p">[</span><span class="s1">'Percentage'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">age_counts</span><span class="p">[</span><span class="s1">'Count'</span><span class="p">]</span> <span class="o">/</span> <span class="n">age_counts</span><span class="p">[</span><span class="s1">'Count'</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
 <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
     <span class="n">age_counts</span><span class="p">,</span>
     <span class="n">x</span><span class="o">=</span><span class="s1">'Age Group'</span><span class="p">,</span>
     <span class="n">y</span><span class="o">=</span><span class="s1">'Count'</span><span class="p">,</span>
     <span class="n">title</span><span class="o">=</span><span class="s2">"Age Distribution"</span><span class="p">,</span>
-    <span class="n">text</span><span class="o">=</span><span class="s1">'Count'</span><span class="p">,</span>
+    <span class="n">text</span><span class="o">=</span><span class="s1">'Percentage'</span><span class="p">,</span>
     <span class="n">color</span><span class="o">=</span><span class="s1">'Age Group'</span><span class="p">,</span>
 <span class="p">)</span>
 
+<span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span><span class="n">texttemplate</span><span class="o">=</span><span class="s1">'%</span><span class="si">{text}</span><span class="s1">%'</span><span class="p">,</span> <span class="n">textposition</span><span class="o">=</span><span class="s1">'outside'</span><span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
     <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">"Age Group"</span><span class="p">,</span>
     <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">"Count"</span><span class="p">,</span>
@@ -7932,6 +7954,17 @@ dtype: int64</pre>
 </div>
 </div>
 </div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>Observation:</strong> The age distribution is fairly balanced across all age groups, with the majority of players falling into the 20-49 age range.</p>
+</div>
+</div>
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -7940,14 +7973,39 @@ dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [8]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">age_gender_dist</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">'Gender'</span><span class="p">,</span> <span class="s1">'AgeBin'</span><span class="p">])[</span><span class="s1">'Gender'</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'Count'</span><span class="p">)</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">age_gender_dist</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">"Gender"</span><span class="p">,</span> <span class="s2">"AgeBin"</span><span class="p">],</span> <span class="n">observed</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="s2">"Gender"</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">size</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Count"</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">age_gender_dist</span><span class="p">[</span><span class="s2">"Percent"</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+<span class="n">male_mask</span> <span class="o">=</span> <span class="n">age_gender_dist</span><span class="p">[</span><span class="s2">"Gender"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"Male"</span>
+<span class="n">female_mask</span> <span class="o">=</span> <span class="n">age_gender_dist</span><span class="p">[</span><span class="s2">"Gender"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"Female"</span>
+
+<span class="n">male_total</span> <span class="o">=</span> <span class="n">age_gender_dist</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">male_mask</span><span class="p">,</span> <span class="s2">"Count"</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">age_gender_dist</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">male_mask</span><span class="p">,</span> <span class="s2">"Percent"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span>
+    <span class="n">age_gender_dist</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">male_mask</span><span class="p">,</span> <span class="s2">"Count"</span><span class="p">]</span> <span class="o">/</span> <span class="n">male_total</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">2</span>
+<span class="p">)</span>
+
+<span class="n">female_total</span> <span class="o">=</span> <span class="n">age_gender_dist</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">female_mask</span><span class="p">,</span> <span class="s2">"Count"</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">age_gender_dist</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">female_mask</span><span class="p">,</span> <span class="s2">"Percent"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span>
+    <span class="n">age_gender_dist</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">female_mask</span><span class="p">,</span> <span class="s2">"Count"</span><span class="p">]</span> <span class="o">/</span> <span class="n">female_total</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">2</span>
+<span class="p">)</span>
 
 <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
-    <span class="n">x</span><span class="o">=</span><span class="n">age_gender_dist</span><span class="o">.</span><span class="n">AgeBin</span><span class="p">,</span>
-    <span class="n">y</span><span class="o">=</span><span class="n">age_gender_dist</span><span class="o">.</span><span class="n">Count</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="n">age_gender_dist</span><span class="o">.</span><span class="n">Gender</span><span class="p">,</span>
+    <span class="n">age_gender_dist</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s2">"AgeBin"</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s2">"Count"</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">"Gender"</span><span class="p">,</span>
     <span class="n">title</span><span class="o">=</span><span class="s2">"Age Distribution By Gender"</span><span class="p">,</span>
     <span class="n">barmode</span><span class="o">=</span><span class="s2">"group"</span><span class="p">,</span>
+    <span class="n">text</span><span class="o">=</span><span class="s2">"Percent"</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span>
+    <span class="n">texttemplate</span><span class="o">=</span><span class="s2">"%</span><span class="si">{text:.1f}</span><span class="s2">%"</span><span class="p">,</span>
+    <span class="n">textposition</span><span class="o">=</span><span class="s2">"outside"</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">fig</span><span class="o">.</span><span class="n">update_xaxes</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Age"</span><span class="p">)</span>
@@ -7965,19 +8023,24 @@ dtype: int64</pre>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>/var/folders/r8/wfzbzqkx22z5qjdyjqnmsf740000gn/T/ipykernel_24215/705184616.py:1: FutureWarning:
-
-The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
-
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <iframe allowfullscreen="" frameborder="0" height="545px" scrolling="no" src="iframe_figures/figure_8.html" width="100%"></iframe>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>Observation</strong>:</p>
+<ul>
+<li>In each age group except <code>10-19</code> there is a big gap between male and female players</li>
+<li>Maybe in young age women play more games?</li>
+</ul>
 </div>
 </div>
 </div>
@@ -8051,6 +8114,17 @@ Name: Age, dtype: float64</pre>
 </div>
 </div>
 </div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>Observation</strong>: Maximum players are from USA &amp; Europe while there is 30% coming from Asian and other growing markets</p>
+</div>
+</div>
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -8061,6 +8135,14 @@ Name: Age, dtype: float64</pre>
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">location_age_dist</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">'Location'</span><span class="p">,</span> <span class="s1">'AgeBin'</span><span class="p">],</span> <span class="n">observed</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="s1">'Location'</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'Count'</span><span class="p">)</span>
 
+<span class="c1"># calculating percentage</span>
+<span class="n">location_age_dist</span><span class="p">[</span><span class="s1">'Percentage'</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+<span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="n">location_age_dist</span><span class="p">[</span><span class="s1">'Location'</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">location_age_dist</span><span class="p">[</span><span class="s1">'Location'</span><span class="p">]</span> <span class="o">==</span> <span class="n">location</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="n">location_age_dist</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">'Count'</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">location_age_dist</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">'Percentage'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">location_age_dist</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">'Count'</span><span class="p">]</span> <span class="o">/</span> <span class="n">total</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
 <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
     <span class="n">location_age_dist</span><span class="p">,</span>
     <span class="n">x</span><span class="o">=</span><span class="s1">'AgeBin'</span><span class="p">,</span>
@@ -8068,6 +8150,12 @@ Name: Age, dtype: float64</pre>
     <span class="n">color</span><span class="o">=</span><span class="s1">'Location'</span><span class="p">,</span>
     <span class="n">title</span><span class="o">=</span><span class="s2">"Age Group Distribution By Location"</span><span class="p">,</span>
     <span class="n">barmode</span><span class="o">=</span><span class="s2">"group"</span><span class="p">,</span>
+    <span class="n">text</span><span class="o">=</span><span class="s1">'Percentage'</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span>
+    <span class="n">texttemplate</span><span class="o">=</span><span class="s1">'%</span><span class="si">{text:.1f}</span><span class="s1">%'</span><span class="p">,</span>
+    <span class="n">textposition</span><span class="o">=</span><span class="s1">'outside'</span>
 <span class="p">)</span>
 
 <span class="n">fig</span><span class="o">.</span><span class="n">update_xaxes</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"AgeBin"</span><span class="p">)</span>
@@ -8091,6 +8179,21 @@ Name: Age, dtype: float64</pre>
 </div>
 </div>
 </div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>Observation</strong>:</p>
+<ul>
+<li>Maximum players come from USA and fit in the 20-49 range</li>
+<li>The gap between players in <code>10-19</code> age range is less than other ages</li>
+</ul>
+</div>
+</div>
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -8101,6 +8204,12 @@ Name: Age, dtype: float64</pre>
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">'DidPurchase'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'InGamePurchases'</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="mi">1</span><span class="p">:</span> <span class="s1">'Yes'</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span> <span class="s1">'No'</span><span class="p">})</span>
 <span class="n">purchase_dist</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">'Gender'</span><span class="p">,</span> <span class="s1">'DidPurchase'</span><span class="p">])[</span><span class="s1">'DidPurchase'</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'Count'</span><span class="p">)</span>
+<span class="n">purchase_dist</span><span class="p">[</span><span class="s1">'Percentage'</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">purchase_dist</span><span class="p">[</span><span class="s1">'DidPurchase'</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">purchase_dist</span><span class="p">[</span><span class="s1">'DidPurchase'</span><span class="p">]</span> <span class="o">==</span> <span class="n">i</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="n">purchase_dist</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">'Count'</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">purchase_dist</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">'Percentage'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">purchase_dist</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">'Count'</span><span class="p">]</span> <span class="o">/</span> <span class="n">total</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
 <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
     <span class="n">purchase_dist</span><span class="p">,</span>
@@ -8109,6 +8218,12 @@ Name: Age, dtype: float64</pre>
     <span class="n">color</span><span class="o">=</span><span class="s1">'DidPurchase'</span><span class="p">,</span>
     <span class="n">title</span><span class="o">=</span><span class="s2">"Purchase Distribution By Gender"</span><span class="p">,</span>
     <span class="n">barmode</span><span class="o">=</span><span class="s2">"group"</span><span class="p">,</span>
+    <span class="n">text</span><span class="o">=</span><span class="s1">'Percentage'</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span>
+    <span class="n">texttemplate</span><span class="o">=</span><span class="s1">'%</span><span class="si">{text:.1f}</span><span class="s1">%'</span><span class="p">,</span>
+    <span class="n">textposition</span><span class="o">=</span><span class="s1">'outside'</span>
 <span class="p">)</span>
 
 <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -8126,6 +8241,40 @@ Name: Age, dtype: float64</pre>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <iframe allowfullscreen="" frameborder="0" height="545px" scrolling="no" src="iframe_figures/figure_12.html" width="100%"></iframe>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>Observation</strong>:</p>
+<ul>
+<li>Since more males are gaming their purchase decision is also reflective of that</li>
+<li>But generally they don't like paying in the game</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>For the 'PlayTimeHours' I will again bin them into groups</p>
+<ul>
+<li>0-4</li>
+<li>5-9</li>
+<li>10-14</li>
+<li>15-19</li>
+<li>20-24</li>
+</ul>
+<p>This will help us understand the distribution better</p>
 </div>
 </div>
 </div>
@@ -8171,18 +8320,41 @@ Name: PlayTimeHours, dtype: float64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span>
-    <span class="n">df</span><span class="p">,</span>
-    <span class="n">x</span><span class="o">=</span><span class="s2">"PlayTimeHours"</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="s2">"Play Time Distribution"</span><span class="p">,</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Create playtime bins</span>
+<span class="n">playtime_bins</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">25</span><span class="p">]</span>
+<span class="n">playtime_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"0-4"</span><span class="p">,</span> <span class="s2">"5-9"</span><span class="p">,</span> <span class="s2">"10-14"</span><span class="p">,</span> <span class="s2">"15-19"</span><span class="p">,</span> <span class="s2">"20-24"</span><span class="p">]</span>
+
+<span class="n">copy_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">copy_df</span><span class="p">[</span><span class="s2">"PlayTimeBin"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span>
+    <span class="n">copy_df</span><span class="p">[</span><span class="s2">"PlayTimeHours"</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">playtime_bins</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">playtime_labels</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">False</span>
 <span class="p">)</span>
 
-<span class="n">fig</span><span class="o">.</span><span class="n">add_vline</span><span class="p">(</span>
-    <span class="n">x</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s2">"PlayTimeHours"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
-    <span class="n">line_dash</span><span class="o">=</span><span class="s2">"dash"</span><span class="p">,</span>
-    <span class="n">line_color</span><span class="o">=</span><span class="s2">"red"</span><span class="p">,</span>
-    <span class="n">annotation_text</span><span class="o">=</span><span class="s2">"Mean Play Time"</span><span class="p">,</span>
-    <span class="n">annotation_position</span><span class="o">=</span><span class="s2">"top left"</span><span class="p">,</span>
+<span class="n">playtime_counts</span> <span class="o">=</span> <span class="n">copy_df</span><span class="p">[</span><span class="s2">"PlayTimeBin"</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">playtime_counts</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"PlayTimeBin"</span><span class="p">,</span> <span class="s2">"Count"</span><span class="p">]</span>
+<span class="n">playtime_counts</span><span class="p">[</span><span class="s2">"Percentage"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span>
+    <span class="n">playtime_counts</span><span class="p">[</span><span class="s2">"Count"</span><span class="p">]</span> <span class="o">/</span> <span class="n">playtime_counts</span><span class="p">[</span><span class="s2">"Count"</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">2</span>
+<span class="p">)</span>
+
+<span class="n">playtime_counts</span><span class="p">[</span><span class="s2">"PlayTimeBin"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span>
+    <span class="n">playtime_counts</span><span class="p">[</span><span class="s2">"PlayTimeBin"</span><span class="p">],</span> <span class="n">categories</span><span class="o">=</span><span class="n">playtime_labels</span><span class="p">,</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">playtime_counts</span> <span class="o">=</span> <span class="n">playtime_counts</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">"PlayTimeBin"</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
+    <span class="n">playtime_counts</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s2">"PlayTimeBin"</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s2">"Count"</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">"Play Time Distribution"</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">"PlayTimeBin"</span><span class="p">,</span>
+    <span class="n">text</span><span class="o">=</span><span class="s2">"Percentage"</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span><span class="n">texttemplate</span><span class="o">=</span><span class="s2">"%</span><span class="si">{text}</span><span class="s2">%"</span><span class="p">,</span> <span class="n">textposition</span><span class="o">=</span><span class="s2">"outside"</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+    <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">"Play Time (Hours)"</span><span class="p">,</span>
+    <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">"Count"</span><span class="p">,</span>
+    <span class="n">xaxis</span><span class="o">=</span><span class="p">{</span><span class="s2">"categoryorder"</span><span class="p">:</span> <span class="s2">"array"</span><span class="p">,</span> <span class="s2">"categoryarray"</span><span class="p">:</span> <span class="n">playtime_labels</span><span class="p">},</span>
 <span class="p">)</span>
 
 <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -8200,6 +8372,20 @@ Name: PlayTimeHours, dtype: float64</pre>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <iframe allowfullscreen="" frameborder="0" height="545px" scrolling="no" src="iframe_figures/figure_14.html" width="100%"></iframe>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>Observation</strong>:</p>
+<ul>
+<li>Maximum gamers like a small gaming session of around <code>5-9</code> hours</li>
+</ul>
 </div>
 </div>
 </div>
@@ -8221,6 +8407,12 @@ Name: PlayTimeHours, dtype: float64</pre>
     <span class="n">y</span><span class="o">=</span><span class="s1">'Avg Play Time'</span><span class="p">,</span>
     <span class="n">title</span><span class="o">=</span><span class="s2">"Average Play Time By Gender"</span><span class="p">,</span>
     <span class="n">color</span><span class="o">=</span><span class="s1">'Gender'</span><span class="p">,</span>
+    <span class="n">text</span><span class="o">=</span><span class="s1">'Avg Play Time'</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span>
+    <span class="n">texttemplate</span><span class="o">=</span><span class="s1">'%</span><span class="si">{text:.2f}</span><span class="s1"> hours'</span><span class="p">,</span>
+    <span class="n">textposition</span><span class="o">=</span><span class="s1">'outside'</span>
 <span class="p">)</span>
 
 <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -8241,6 +8433,17 @@ Name: PlayTimeHours, dtype: float64</pre>
 </div>
 </div>
 </div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>Observation</strong>: Both genders are playing aprrox 12 hours</p>
+</div>
+</div>
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -8249,28 +8452,46 @@ Name: PlayTimeHours, dtype: float64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [16]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">playtime_gender</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"Gender"</span><span class="p">)[[</span><span class="s2">"PlayTimeHours"</span><span class="p">,</span> <span class="s2">"AvgSessionDurationMinutes"</span><span class="p">,</span> <span class="s2">"SessionsPerWeek"</span><span class="p">]]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">playtime_gender</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"Gender"</span><span class="p">)[</span>
+        <span class="p">[</span><span class="s2">"PlayTimeHours"</span><span class="p">,</span> <span class="s2">"AvgSessionDurationMinutes"</span><span class="p">,</span> <span class="s2">"SessionsPerWeek"</span><span class="p">]</span>
+    <span class="p">]</span>
+    <span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="p">)</span>
 
 <span class="n">fig</span> <span class="o">=</span> <span class="n">make_subplots</span><span class="p">(</span>
     <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="n">cols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-    <span class="n">subplot_titles</span><span class="o">=</span><span class="p">[</span><span class="s2">"Average Play Time"</span><span class="p">,</span> <span class="s2">"Average Session Duration"</span><span class="p">,</span> <span class="s2">"Average Sessions Per Week"</span><span class="p">],</span>
+    <span class="n">subplot_titles</span><span class="o">=</span><span class="p">[</span>
+        <span class="s2">"Average Play Time"</span><span class="p">,</span>
+        <span class="s2">"Average Session Duration"</span><span class="p">,</span>
+        <span class="s2">"Average Sessions Per Week"</span><span class="p">,</span>
+    <span class="p">],</span>
 <span class="p">)</span>
 
 <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
-    <span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">playtime_gender</span><span class="o">.</span><span class="n">Gender</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">playtime_gender</span><span class="o">.</span><span class="n">PlayTimeHours</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'Play Time'</span><span class="p">),</span>
+    <span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">playtime_gender</span><span class="o">.</span><span class="n">Gender</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">playtime_gender</span><span class="o">.</span><span class="n">PlayTimeHours</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"Play Time"</span><span class="p">),</span>
     <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
-    <span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">playtime_gender</span><span class="o">.</span><span class="n">Gender</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">playtime_gender</span><span class="o">.</span><span class="n">AvgSessionDurationMinutes</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'Session Duration'</span><span class="p">),</span>
+    <span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">playtime_gender</span><span class="o">.</span><span class="n">Gender</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">playtime_gender</span><span class="o">.</span><span class="n">AvgSessionDurationMinutes</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"Session Duration"</span><span class="p">,</span>
+    <span class="p">),</span>
     <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="n">col</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
-    <span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">playtime_gender</span><span class="o">.</span><span class="n">Gender</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">playtime_gender</span><span class="o">.</span><span class="n">SessionsPerWeek</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'Sessions Per Week'</span><span class="p">),</span>
+    <span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">playtime_gender</span><span class="o">.</span><span class="n">Gender</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">playtime_gender</span><span class="o">.</span><span class="n">SessionsPerWeek</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"Sessions Per Week"</span><span class="p">,</span>
+    <span class="p">),</span>
     <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="n">col</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
 <span class="p">)</span>
@@ -8290,6 +8511,17 @@ Name: PlayTimeHours, dtype: float64</pre>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <iframe allowfullscreen="" frameborder="0" height="545px" scrolling="no" src="iframe_figures/figure_16.html" width="100%"></iframe>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>Observation</strong>: Females tend to play more frequently but male play for longer time</p>
 </div>
 </div>
 </div>
@@ -8326,6 +8558,17 @@ Name: PlayTimeHours, dtype: float64</pre>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <iframe allowfullscreen="" frameborder="0" height="545px" scrolling="no" src="iframe_figures/figure_17.html" width="100%"></iframe>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>Observation</strong>: The playtime is largely evenly distributed regardless of the game genre</p>
 </div>
 </div>
 </div>
@@ -8403,6 +8646,22 @@ Name: PlayTimeHours, dtype: float64</pre>
 </div>
 </div>
 </div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>Observation</strong>:</p>
+<ul>
+<li>RPG has the minimum Session Duration</li>
+<li>Strategy has maximum Session Duration as well as session count because we need play more hours in 1 session</li>
+<li>Action has maximum avg play time</li>
+</ul>
+</div>
+</div>
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -8411,20 +8670,31 @@ Name: PlayTimeHours, dtype: float64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [19]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">PlayerLevel</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">'hist'</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Player Level Distribution"</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">'plotly'</span><span class="p">)</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">copy_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">copy_df</span><span class="p">[</span><span class="s1">'PlayerLevelBin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">copy_df</span><span class="p">[</span><span class="s1">'PlayerLevel'</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">'1-20'</span><span class="p">,</span> <span class="s1">'21-40'</span><span class="p">,</span> <span class="s1">'41-60'</span><span class="p">,</span> <span class="s1">'61-80'</span><span class="p">,</span> <span class="s1">'81-100'</span><span class="p">])</span>
+<span class="n">mean_player_level</span> <span class="o">=</span> <span class="n">copy_df</span><span class="p">[</span><span class="s1">'PlayerLevel'</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 
-<span class="n">mean_player_level</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'PlayerLevel'</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">player_level_dist</span> <span class="o">=</span> <span class="n">copy_df</span><span class="p">[</span><span class="s1">'PlayerLevelBin'</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">player_level_dist</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Player Level'</span><span class="p">,</span> <span class="s1">'Count'</span><span class="p">]</span>
+<span class="n">player_level_dist</span><span class="p">[</span><span class="s1">'Percentage'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">player_level_dist</span><span class="p">[</span><span class="s1">'Count'</span><span class="p">]</span> <span class="o">/</span> <span class="n">player_level_dist</span><span class="p">[</span><span class="s1">'Count'</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
-<span class="n">fig</span><span class="o">.</span><span class="n">add_vline</span><span class="p">(</span>
-    <span class="n">x</span><span class="o">=</span><span class="n">mean_player_level</span><span class="p">,</span>
-    <span class="n">line_dash</span><span class="o">=</span><span class="s2">"dash"</span><span class="p">,</span>
-    <span class="n">line_color</span><span class="o">=</span><span class="s2">"red"</span><span class="p">,</span>
-    <span class="n">annotation_text</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Mean Player Level </span><span class="si">{</span><span class="n">mean_player_level</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
-    <span class="n">annotation_position</span><span class="o">=</span><span class="s2">"top"</span><span class="p">,</span>
+<span class="c1"># sort the player level</span>
+<span class="n">player_level_dist</span><span class="p">[</span><span class="s1">'Player Level'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">player_level_dist</span><span class="p">[</span><span class="s1">'Player Level'</span><span class="p">],</span> <span class="n">categories</span><span class="o">=</span><span class="p">[</span><span class="s1">'1-20'</span><span class="p">,</span> <span class="s1">'21-40'</span><span class="p">,</span> <span class="s1">'41-60'</span><span class="p">,</span> <span class="s1">'61-80'</span><span class="p">,</span> <span class="s1">'81-100'</span><span class="p">],</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">player_level_dist</span> <span class="o">=</span> <span class="n">player_level_dist</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">'Player Level'</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
+    <span class="n">player_level_dist</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s1">'Player Level'</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s1">'Count'</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">"Player Level Distribution"</span><span class="p">,</span>
+    <span class="n">text</span><span class="o">=</span><span class="s1">'Percentage'</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s1">'Player Level'</span>
 <span class="p">)</span>
 
-<span class="n">fig</span><span class="o">.</span><span class="n">update_xaxes</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Player Level"</span><span class="p">)</span>
-<span class="n">fig</span><span class="o">.</span><span class="n">update_yaxes</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Count"</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span>
+    <span class="n">texttemplate</span><span class="o">=</span><span class="s1">'%</span><span class="si">{text}</span><span class="s1">%'</span><span class="p">,</span>
+    <span class="n">textposition</span><span class="o">=</span><span class="s1">'outside'</span>
+<span class="p">)</span>
 
 <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -8444,6 +8714,21 @@ Name: PlayTimeHours, dtype: float64</pre>
 </div>
 </div>
 </div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>Observation</strong>:</p>
+<ul>
+<li>Maximum players are the new players since <code>1-20</code> have <strong>20.72%</strong> of the players</li>
+<li>But also there are many high level players too</li>
+</ul>
+</div>
+</div>
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -8452,22 +8737,61 @@ Name: PlayTimeHours, dtype: float64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [20]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">playerlevel_location</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"Location"</span><span class="p">)[</span><span class="s1">'PlayerLevel'</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Avg Player Level"</span><span class="p">)</span>
-<span class="n">playerlevel_gender</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"Gender"</span><span class="p">)[</span><span class="s1">'PlayerLevel'</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Avg Player Level"</span><span class="p">)</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">playerlevel_location</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"Location"</span><span class="p">)[</span><span class="s2">"PlayerLevel"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Avg Player Level"</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">playerlevel_gender</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"Gender"</span><span class="p">)[</span><span class="s2">"PlayerLevel"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Avg Player Level"</span><span class="p">)</span>
+<span class="p">)</span>
 
-<span class="n">fig</span> <span class="o">=</span> <span class="n">make_subplots</span><span class="p">(</span><span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">subplot_titles</span><span class="o">=</span><span class="p">[</span><span class="s2">"Average Player Level By Location"</span><span class="p">,</span> <span class="s2">"Average Player Level By Gender"</span><span class="p">])</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">make_subplots</span><span class="p">(</span>
+    <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">cols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">subplot_titles</span><span class="o">=</span><span class="p">[</span>
+        <span class="s2">"Average Player Level By Location"</span><span class="p">,</span>
+        <span class="s2">"Average Player Level By Gender"</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">)</span>
 
 <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
-    <span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">playerlevel_location</span><span class="o">.</span><span class="n">Location</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">playerlevel_location</span><span class="p">[</span><span class="s1">'Avg Player Level'</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">'Player Level By Location'</span><span class="p">),</span>
+    <span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">playerlevel_location</span><span class="o">.</span><span class="n">Location</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">playerlevel_location</span><span class="p">[</span><span class="s2">"Avg Player Level"</span><span class="p">],</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"Player Level By Location"</span><span class="p">,</span>
+    <span class="p">),</span>
     <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
 <span class="p">)</span>
 
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">playerlevel_location</span><span class="p">)):</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">add_annotation</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">playerlevel_location</span><span class="o">.</span><span class="n">Location</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">playerlevel_location</span><span class="p">[</span><span class="s2">"Avg Player Level"</span><span class="p">][</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">text</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">playerlevel_location</span><span class="p">[</span><span class="s1">'Avg Player Level'</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="n">yshift</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">showarrow</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
 <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
-    <span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">playerlevel_gender</span><span class="o">.</span><span class="n">Gender</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">playerlevel_gender</span><span class="p">[</span><span class="s1">'Avg Player Level'</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">'Player Level By Gender'</span><span class="p">),</span>
+    <span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">playerlevel_gender</span><span class="o">.</span><span class="n">Gender</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">playerlevel_gender</span><span class="p">[</span><span class="s2">"Avg Player Level"</span><span class="p">],</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"Player Level By Gender"</span><span class="p">,</span>
+    <span class="p">),</span>
     <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="n">col</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
 <span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">playerlevel_gender</span><span class="p">)):</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">add_annotation</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">playerlevel_gender</span><span class="o">.</span><span class="n">Gender</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">playerlevel_gender</span><span class="p">[</span><span class="s2">"Avg Player Level"</span><span class="p">][</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">text</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">playerlevel_gender</span><span class="p">[</span><span class="s2">"Avg Player Level"</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+        <span class="n">yshift</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">showarrow</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">col</span><span class="o">=</span><span class="mi">2</span>
+    <span class="p">)</span>
 
 <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -8484,6 +8808,20 @@ Name: PlayTimeHours, dtype: float64</pre>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <iframe allowfullscreen="" frameborder="0" height="545px" scrolling="no" src="iframe_figures/figure_20.html" width="100%"></iframe>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>Observation</strong>:</p>
+<ul>
+<li>Avg player level is balanced across the locations and genders</li>
+</ul>
 </div>
 </div>
 </div>
@@ -8635,7 +8973,10 @@ Name: PlayTimeHours, dtype: float64</pre>
     <span class="n">y</span><span class="o">=</span><span class="s2">"Avg Player Level"</span><span class="p">,</span>
     <span class="n">title</span><span class="o">=</span><span class="s2">"Average Player Level By Genre"</span><span class="p">,</span>
     <span class="n">color</span><span class="o">=</span><span class="s2">"GameGenre"</span><span class="p">,</span>
+    <span class="n">text</span><span class="o">=</span><span class="s2">"Avg Player Level"</span><span class="p">,</span>
 <span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span><span class="n">texttemplate</span><span class="o">=</span><span class="s2">"%</span><span class="si">{text:.0f}</span><span class="s2">"</span><span class="p">,</span> <span class="n">textposition</span><span class="o">=</span><span class="s2">"outside"</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -8655,6 +8996,17 @@ Name: PlayTimeHours, dtype: float64</pre>
 </div>
 </div>
 </div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>Observation</strong>: The average player level is highest for the "Action" genre, followed by "Sports" and "Strategy" genres.</p>
+</div>
+</div>
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -8665,6 +9017,7 @@ Name: PlayTimeHours, dtype: float64</pre>
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># 1. Examine target variable distribution</span>
 <span class="n">engagement_counts</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'EngagementLevel'</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'Count'</span><span class="p">)</span>
+<span class="n">engagement_counts</span><span class="p">[</span><span class="s1">'Percentage'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">engagement_counts</span><span class="p">[</span><span class="s1">'Count'</span><span class="p">]</span> <span class="o">/</span> <span class="n">engagement_counts</span><span class="p">[</span><span class="s1">'Count'</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
 <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
     <span class="n">engagement_counts</span><span class="p">,</span>
@@ -8672,8 +9025,11 @@ Name: PlayTimeHours, dtype: float64</pre>
     <span class="n">y</span><span class="o">=</span><span class="s1">'Count'</span><span class="p">,</span>
     <span class="n">title</span><span class="o">=</span><span class="s1">'Distribution of Engagement Levels'</span><span class="p">,</span>
     <span class="n">color</span><span class="o">=</span><span class="s1">'EngagementLevel'</span><span class="p">,</span>
-    <span class="n">text</span><span class="o">=</span><span class="s1">'Count'</span>
+    <span class="n">text</span><span class="o">=</span><span class="s1">'Percentage'</span>
 <span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span><span class="n">texttemplate</span><span class="o">=</span><span class="s1">'%</span><span class="si">{text}</span><span class="s1">%'</span><span class="p">,</span> <span class="n">textposition</span><span class="o">=</span><span class="s1">'outside'</span><span class="p">)</span>
+
 <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">xaxis_title</span><span class="o">=</span><span class="s1">'Engagement Level'</span><span class="p">,</span> <span class="n">yaxis_title</span><span class="o">=</span><span class="s1">'Count'</span><span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -8690,6 +9046,22 @@ Name: PlayTimeHours, dtype: float64</pre>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <iframe allowfullscreen="" frameborder="0" height="545px" scrolling="no" src="iframe_figures/figure_23.html" width="100%"></iframe>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>Observation</strong>:</p>
+<ul>
+<li>The target value is evenly distributed with 50% in Medium</li>
+<li>25% in high</li>
+<li>25% in low</li>
+</ul>
 </div>
 </div>
 </div>
@@ -8738,6 +9110,13 @@ Name: PlayTimeHours, dtype: float64</pre>
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">age_bin_engagement</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">'AgeBin'</span><span class="p">,</span> <span class="s1">'EngagementLevel'</span><span class="p">],</span> <span class="n">observed</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="s1">'EngagementLevel'</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'Count'</span><span class="p">)</span>
 
+<span class="n">age_bin_engagement</span><span class="p">[</span><span class="s1">'Percentage'</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+<span class="k">for</span> <span class="n">age</span> <span class="ow">in</span> <span class="n">age_bin_engagement</span><span class="p">[</span><span class="s1">'AgeBin'</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">age_bin_engagement</span><span class="p">[</span><span class="s1">'AgeBin'</span><span class="p">]</span> <span class="o">==</span> <span class="n">age</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="n">age_bin_engagement</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">'Count'</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">age_bin_engagement</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">'Percentage'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">age_bin_engagement</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">'Count'</span><span class="p">]</span> <span class="o">/</span> <span class="n">total</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
 <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
     <span class="n">age_bin_engagement</span><span class="p">,</span>
     <span class="n">x</span><span class="o">=</span><span class="s1">'AgeBin'</span><span class="p">,</span>
@@ -8745,7 +9124,10 @@ Name: PlayTimeHours, dtype: float64</pre>
     <span class="n">color</span><span class="o">=</span><span class="s1">'EngagementLevel'</span><span class="p">,</span>
     <span class="n">title</span><span class="o">=</span><span class="s1">'Engagement Level Distribution By Age Group'</span><span class="p">,</span>
     <span class="n">barmode</span><span class="o">=</span><span class="s1">'group'</span><span class="p">,</span>
+    <span class="n">text</span><span class="o">=</span><span class="s1">'Percentage'</span>
 <span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span><span class="n">texttemplate</span><span class="o">=</span><span class="s1">'%</span><span class="si">{text:.1f}</span><span class="s1">%'</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">xaxis_title</span><span class="o">=</span><span class="s1">'Age Group'</span><span class="p">,</span> <span class="n">yaxis_title</span><span class="o">=</span><span class="s1">'Count'</span><span class="p">)</span>
 
@@ -8767,6 +9149,21 @@ Name: PlayTimeHours, dtype: float64</pre>
 </div>
 </div>
 </div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>Observation</strong>:</p>
+<ul>
+<li>The highest engangement level is medium across all age gaps</li>
+<li>While high and low are evenly distributed</li>
+</ul>
+</div>
+</div>
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -8776,6 +9173,12 @@ Name: PlayTimeHours, dtype: float64</pre>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">genre_engagement</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'GameGenre'</span><span class="p">)[</span><span class="s1">'EngagementLevel'</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'Count'</span><span class="p">)</span>
+<span class="n">genre_engagement</span><span class="p">[</span><span class="s1">'Percentage'</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+<span class="k">for</span> <span class="n">genre</span> <span class="ow">in</span> <span class="n">genre_engagement</span><span class="p">[</span><span class="s1">'GameGenre'</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">genre_engagement</span><span class="p">[</span><span class="s1">'GameGenre'</span><span class="p">]</span> <span class="o">==</span> <span class="n">genre</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="n">genre_engagement</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">'Count'</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">genre_engagement</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">'Percentage'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">genre_engagement</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="s1">'Count'</span><span class="p">]</span> <span class="o">/</span> <span class="n">total</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
 <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
     <span class="n">genre_engagement</span><span class="p">,</span>
@@ -8783,8 +9186,11 @@ Name: PlayTimeHours, dtype: float64</pre>
     <span class="n">y</span><span class="o">=</span><span class="s1">'Count'</span><span class="p">,</span>
     <span class="n">title</span><span class="o">=</span><span class="s1">'Engagement Level Distribution By Genre'</span><span class="p">,</span>
     <span class="n">color</span><span class="o">=</span><span class="s1">'EngagementLevel'</span><span class="p">,</span>
-    <span class="n">barmode</span><span class="o">=</span><span class="s1">'group'</span>
+    <span class="n">barmode</span><span class="o">=</span><span class="s1">'group'</span><span class="p">,</span>
+    <span class="n">text</span><span class="o">=</span><span class="s1">'Percentage'</span>
 <span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span><span class="n">texttemplate</span><span class="o">=</span><span class="s1">'%</span><span class="si">{text:.1f}</span><span class="s1">%'</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">xaxis_title</span><span class="o">=</span><span class="s1">'Game Genre'</span><span class="p">,</span> <span class="n">yaxis_title</span><span class="o">=</span><span class="s1">'Count'</span><span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -9119,6 +9525,35 @@ Name: PlayTimeHours, dtype: float64</pre>
 </div>
 </div>
 </div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>Observation</strong>:</p>
+<ul>
+<li>We can notice the features that correlate to the <code>Engagement Level</code></li>
+<li>The highest correlation comes from AvgSessionDuration and SessionsPerWeek</li>
+<li>The genre, gender, location, difficulty has very minimal impact</li>
+<li>Achievements also play little role but is there</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>We will remove the weak features from our dataset
+-&gt; 'Gender', 'Location', 'GameGenre', 'GameDifficulty'</p>
+</div>
+</div>
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -9127,8 +9562,7 @@ Name: PlayTimeHours, dtype: float64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In [29]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># removing weak features 'Gender', 'Location', 'GameGenre', 'GameDifficulty'</span>
-<span class="n">df_copy</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'Gender'</span><span class="p">,</span> <span class="s1">'Location'</span><span class="p">,</span> <span class="s1">'GameGenre'</span><span class="p">,</span> <span class="s1">'GameDifficulty'</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">df_copy</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'Gender'</span><span class="p">,</span> <span class="s1">'Location'</span><span class="p">,</span> <span class="s1">'GameGenre'</span><span class="p">,</span> <span class="s1">'GameDifficulty'</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'Gender'</span><span class="p">,</span> <span class="s1">'Location'</span><span class="p">,</span> <span class="s1">'GameGenre'</span><span class="p">,</span> <span class="s1">'GameDifficulty'</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">df_copy</span><span class="o">.</span><span class="n">columns</span>
 </pre></div>
@@ -9287,6 +9721,37 @@ Name: PlayTimeHours, dtype: float64</pre>
 </div>
 </div>
 </div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>Our final features for model training are:</p>
+<ul>
+<li>PlaytimeHours</li>
+<li>AvgSessionDuration</li>
+<li>SessionsPerWeek</li>
+<li>InGamePurchases</li>
+<li>AchievementsUnlocked</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="K-Means-Clustering-for-Engagement-Levels">K Means Clustering for Engagement Levels<a class="anchor-link" href="#K-Means-Clustering-for-Engagement-Levels">¶</a></h2><p>To ensure that the <code>EngagementLevel</code> variable has only 3 distinct values, we will apply K Means Clustering.
+This method helps in categorizing the data into three clusters.</p>
+<p>This will act as a sanity check so we know that <code>EngagementLevel</code> actually has 3 values and 5 values</p>
+</div>
+</div>
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -9391,18 +9856,6 @@ Name: PlayTimeHours, dtype: float64</pre>
 </table>
 </div>
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="K-Means-Clustering-for-Engagement-Levels">K Means Clustering for Engagement Levels<a class="anchor-link" href="#K-Means-Clustering-for-Engagement-Levels">¶</a></h2><p>To ensure that the <code>EngagementLevel</code> variable has only 3 distinct values, we will apply K Means Clustering.
-This method helps in categorizing the data into three clusters.</p>
 </div>
 </div>
 </div>
@@ -9596,9 +10049,9 @@ Silhouette Score: 0.11514683965261634
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
     <span class="n">x</span><span class="o">=</span><span class="n">k_range</span><span class="p">,</span>
-    <span class="n">y</span><span class="o">=</span><span class="n">inertia</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="s2">"Inertia vs Number of Clusters"</span><span class="p">,</span>
-    <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="s2">"x"</span><span class="p">:</span> <span class="s2">"Number of Clusters"</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">:</span> <span class="s2">"Inertia"</span><span class="p">},</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">silhouette_scores</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">"Silhouette Score vs Number of Clusters"</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="s2">"x"</span><span class="p">:</span> <span class="s2">"Number of Clusters"</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">:</span> <span class="s2">"Silhouette Score"</span><span class="p">},</span>
 <span class="p">)</span>
 
 <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -9619,6 +10072,31 @@ Silhouette Score: 0.11514683965261634
 </div>
 </div>
 </div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>Observation</strong>:</p>
+<ul>
+<li>We can see from the silhoute scores graph that the no of clusters peak at <strong>3</strong></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>To visualize the <strong>3</strong> clusters better we will apply <strong>PCA dimensionality reduction</strong> and then plot the clusters</p>
+</div>
+</div>
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -9627,11 +10105,25 @@ Silhouette Score: 0.11514683965261634
 <div class="jp-InputPrompt jp-InputArea-prompt">In [35]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
-    <span class="n">x</span><span class="o">=</span><span class="n">k_range</span><span class="p">,</span>
-    <span class="n">y</span><span class="o">=</span><span class="n">silhouette_scores</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="s2">"Silhouette Score vs Number of Clusters"</span><span class="p">,</span>
-    <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="s2">"x"</span><span class="p">:</span> <span class="s2">"Number of Clusters"</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">:</span> <span class="s2">"Silhouette Score"</span><span class="p">},</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># plotting the clusters with help of PCA</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.decomposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">PCA</span>
+
+<span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">k_means_df_pca</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">k_means_df</span><span class="p">)</span>
+
+<span class="n">k_means_df_pca</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">k_means_df_pca</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"PC1"</span><span class="p">,</span> <span class="s2">"PC2"</span><span class="p">])</span>
+
+<span class="n">k_means</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">k_means</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">k_means_df_pca</span><span class="p">)</span>
+
+<span class="n">k_means_df_pca</span><span class="p">[</span><span class="s2">"Cluster"</span><span class="p">]</span> <span class="o">=</span> <span class="n">k_means</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">k_means_df_pca</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+    <span class="n">k_means_df_pca</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s2">"PC1"</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s2">"PC2"</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">k_means</span><span class="o">.</span><span class="n">labels_</span><span class="p">),</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">"KMeans Clusters"</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -9648,73 +10140,6 @@ Silhouette Score: 0.11514683965261634
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
 <iframe allowfullscreen="" frameborder="0" height="545px" scrolling="no" src="iframe_figures/figure_35.html" width="100%"></iframe>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p><strong>To vissualze the clustering better we will apply PCA dimensionality reduction and then plot the clusters</strong></p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [36]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># plotting the clusters with help of PCA</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.decomposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">PCA</span>
-
-<span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">k_means_df_pca</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">k_means_df</span><span class="p">)</span>
-
-<span class="n">k_means</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
-<span class="n">k_means</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">k_means_df_pca</span><span class="p">)</span>
-
-<span class="n">k_means_df_pca</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">k_means_df_pca</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"PC1"</span><span class="p">,</span> <span class="s2">"PC2"</span><span class="p">])</span>
-<span class="n">k_means_df_pca</span><span class="p">[</span><span class="s2">"Cluster"</span><span class="p">]</span> <span class="o">=</span> <span class="n">k_means</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">k_means_df_pca</span><span class="p">)</span>
-
-<span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
-    <span class="n">k_means_df_pca</span><span class="p">,</span>
-    <span class="n">x</span><span class="o">=</span><span class="s2">"PC1"</span><span class="p">,</span>
-    <span class="n">y</span><span class="o">=</span><span class="s2">"PC2"</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="n">k_means</span><span class="o">.</span><span class="n">labels_</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="s2">"KMeans Clusters"</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>/Users/captain-mac/Documents/GISMA/MachineLearningProject/venv/lib/python3.13/site-packages/sklearn/utils/validation.py:2732: UserWarning:
-
-X has feature names, but KMeans was fitted without feature names
-
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
-<iframe allowfullscreen="" frameborder="0" height="545px" scrolling="no" src="iframe_figures/figure_36.html" width="100%"></iframe>
 </div>
 </div>
 </div>
@@ -9769,7 +10194,7 @@ X has feature names, but KMeans was fitted without feature names
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [37]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [36]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">levels</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">EngagementLevel</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
@@ -9795,7 +10220,7 @@ X has feature names, but KMeans was fitted without feature names
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
-<iframe allowfullscreen="" frameborder="0" height="545px" scrolling="no" src="iframe_figures/figure_37.html" width="100%"></iframe>
+<iframe allowfullscreen="" frameborder="0" height="545px" scrolling="no" src="iframe_figures/figure_36.html" width="100%"></iframe>
 </div>
 </div>
 </div>
@@ -9816,7 +10241,7 @@ X has feature names, but KMeans was fitted without feature names
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [38]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [37]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
@@ -9842,6 +10267,44 @@ X has feature names, but KMeans was fitted without feature names
 </div>
 </div>
 </div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>We are splitting our dataset into training, validation and testing</p>
+<ul>
+<li>We will use the training and validation datasets on model training and understanding which is good model</li>
+<li>Then we will hyperparamter tune the best model</li>
+<li>Then we will use the test dataset on the best model with best parameters</li>
+</ul>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [38]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"EngagementLevel"</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"EngagementLevel"</span><span class="p">]</span>
+
+<span class="c1"># First split: separate out the test set (20% of data)</span>
+<span class="n">X_temp</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_temp</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+
+<span class="c1"># Second split: divide the remaining data into training and validation sets</span>
+<span class="c1"># 0.2/0.8 = 0.25 (25% of remaining data = 20% of total data)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_val</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X_temp</span><span class="p">,</span> <span class="n">y_temp</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y_temp</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -9850,12 +10313,12 @@ X has feature names, but KMeans was fitted without feature names
 <div class="jp-InputPrompt jp-InputArea-prompt">In [39]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"EngagementLevel"</span><span class="p">])</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"EngagementLevel"</span><span class="p">]</span>
-
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
-
-<span class="sa">f</span><span class="s2">"X_train shape: </span><span class="si">{</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, X_test shape: </span><span class="si">{</span><span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, y_train shape: </span><span class="si">{</span><span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, y_test shape: </span><span class="si">{</span><span class="n">y_test</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">"</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"X_train shape: </span><span class="si">{</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2"> of data)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"X_val shape: </span><span class="si">{</span><span class="n">X_val</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">X_val</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2"> of data)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"X_test shape: </span><span class="si">{</span><span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2"> of data)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"y_train shape: </span><span class="si">{</span><span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"y_val shape: </span><span class="si">{</span><span class="n">y_val</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"y_test shape: </span><span class="si">{</span><span class="n">y_test</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -9865,10 +10328,50 @@ X has feature names, but KMeans was fitted without feature names
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[39]:</div>
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>'X_train shape: (32027, 7), X_test shape: (8007, 7), y_train shape: (32027,), y_test shape: (8007,)'</pre>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>X_train shape: (24020, 7) (60.0% of data)
+X_val shape: (8007, 7) (20.0% of data)
+X_test shape: (8007, 7) (20.0% of data)
+y_train shape: (24020,)
+y_val shape: (8007,)
+y_test shape: (8007,)
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [40]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Class distribution:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Training set: </span><span class="si">{</span><span class="n">y_train</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Validation set: </span><span class="si">{</span><span class="n">y_val</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Test set: </span><span class="si">{</span><span class="n">y_test</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>
+Class distribution:
+Training set: {'Medium': 11624, 'High': 6202, 'Low': 6194}
+Validation set: {'Medium': 3875, 'High': 2067, 'Low': 2065}
+Test set: {'Medium': 3875, 'High': 2067, 'Low': 2065}
+</pre>
 </div>
 </div>
 </div>
@@ -9878,7 +10381,7 @@ X has feature names, but KMeans was fitted without feature names
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [40]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [41]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">preprocessor</span> <span class="o">=</span> <span class="n">ColumnTransformer</span><span class="p">(</span>
@@ -9889,9 +10392,11 @@ X has feature names, but KMeans was fitted without feature names
 <span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
 
 <span class="n">X_train</span> <span class="o">=</span> <span class="n">preprocessor</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">X_val</span> <span class="o">=</span> <span class="n">preprocessor</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span>
 <span class="n">X_test</span> <span class="o">=</span> <span class="n">preprocessor</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 <span class="n">label_encoder</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span>
 <span class="n">y_train</span> <span class="o">=</span> <span class="n">label_encoder</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">y_train</span><span class="p">)</span>
+<span class="n">y_val</span> <span class="o">=</span> <span class="n">label_encoder</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">y_val</span><span class="p">)</span>
 <span class="n">y_test</span> <span class="o">=</span> <span class="n">label_encoder</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">y_test</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -9903,7 +10408,7 @@ X has feature names, but KMeans was fitted without feature names
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [41]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [42]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
@@ -9915,19 +10420,19 @@ X has feature names, but KMeans was fitted without feature names
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Training </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+    <span class="n">y_pred_original</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span>
 
     <span class="n">train_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
 
     <span class="n">results</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">'train_time'</span><span class="p">:</span> <span class="n">train_time</span><span class="p">,</span>
-        <span class="s1">'train_accuracy'</span><span class="p">:</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">),</span>
-        <span class="s1">'train_f1'</span><span class="p">:</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s1">'weighted'</span><span class="p">),</span>
-        <span class="s1">'train_recall'</span><span class="p">:</span> <span class="n">recall_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s1">'weighted'</span><span class="p">),</span>
-        <span class="s1">'train_precision'</span><span class="p">:</span> <span class="n">precision_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s1">'weighted'</span><span class="p">),</span>
-        <span class="s1">'mean_absolute_error'</span><span class="p">:</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+        <span class="s1">'train_accuracy'</span><span class="p">:</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_val</span><span class="p">,</span> <span class="n">y_pred_original</span><span class="p">),</span>
+        <span class="s1">'train_f1'</span><span class="p">:</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y_val</span><span class="p">,</span> <span class="n">y_pred_original</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s1">'weighted'</span><span class="p">),</span>
+        <span class="s1">'train_recall'</span><span class="p">:</span> <span class="n">recall_score</span><span class="p">(</span><span class="n">y_val</span><span class="p">,</span> <span class="n">y_pred_original</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s1">'weighted'</span><span class="p">),</span>
+        <span class="s1">'train_precision'</span><span class="p">:</span> <span class="n">precision_score</span><span class="p">(</span><span class="n">y_val</span><span class="p">,</span> <span class="n">y_pred_original</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s1">'weighted'</span><span class="p">),</span>
+        <span class="s1">'mean_absolute_error'</span><span class="p">:</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">y_val</span><span class="p">,</span> <span class="n">y_pred_original</span><span class="p">)</span>
     <span class="p">}</span>
-    <span class="n">confusion_matrices</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+    <span class="n">confusion_matrices</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_val</span><span class="p">,</span> <span class="n">y_pred_original</span><span class="p">)</span>
     
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Training </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2"> complete time taken: </span><span class="si">{</span><span class="n">train_time</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> seconds"</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
@@ -9944,22 +10449,22 @@ X has feature names, but KMeans was fitted without feature names
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Training Logistic Regression
-Training Logistic Regression complete time taken: 0.03 seconds
+Training Logistic Regression complete time taken: 0.02 seconds
 
 Training Random Forest
-Training Random Forest complete time taken: 2.19 seconds
+Training Random Forest complete time taken: 1.67 seconds
 
 Training Gradient Boosting
-Training Gradient Boosting complete time taken: 6.48 seconds
+Training Gradient Boosting complete time taken: 5.12 seconds
 
 Training SVM
-Training SVM complete time taken: 7.00 seconds
+Training SVM complete time taken: 4.51 seconds
 
 Training Naive Bayes
 Training Naive Bayes complete time taken: 0.00 seconds
 
 Training KNN
-Training KNN complete time taken: 0.15 seconds
+Training KNN complete time taken: 0.14 seconds
 
 </pre>
 </div>
@@ -9982,7 +10487,7 @@ Training KNN complete time taken: 0.15 seconds
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [42]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [43]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">results_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
@@ -10028,57 +10533,57 @@ Training KNN complete time taken: 0.15 seconds
 <tbody>
 <tr>
 <th>Logistic Regression</th>
-<td>0.030553</td>
-<td>0.821906</td>
-<td>0.820474</td>
-<td>0.821906</td>
-<td>0.824000</td>
-<td>0.234045</td>
+<td>0.022093</td>
+<td>0.820782</td>
+<td>0.819479</td>
+<td>0.820782</td>
+<td>0.822680</td>
+<td>0.235419</td>
 </tr>
 <tr>
 <th>Random Forest</th>
-<td>2.192730</td>
-<td>0.911078</td>
-<td>0.910777</td>
-<td>0.911078</td>
-<td>0.911239</td>
-<td>0.123642</td>
+<td>1.673133</td>
+<td>0.910328</td>
+<td>0.909970</td>
+<td>0.910328</td>
+<td>0.911077</td>
+<td>0.127014</td>
 </tr>
 <tr>
 <th>Gradient Boosting</th>
-<td>6.475958</td>
-<td>0.906332</td>
-<td>0.905957</td>
-<td>0.906332</td>
-<td>0.906603</td>
-<td>0.128637</td>
+<td>5.123101</td>
+<td>0.908830</td>
+<td>0.908558</td>
+<td>0.908830</td>
+<td>0.909061</td>
+<td>0.129637</td>
 </tr>
 <tr>
 <th>SVM</th>
-<td>6.998722</td>
-<td>0.908705</td>
-<td>0.908242</td>
-<td>0.908705</td>
-<td>0.909319</td>
-<td>0.125141</td>
+<td>4.509271</td>
+<td>0.906832</td>
+<td>0.906394</td>
+<td>0.906832</td>
+<td>0.907916</td>
+<td>0.130636</td>
 </tr>
 <tr>
 <th>Naive Bayes</th>
-<td>0.004123</td>
-<td>0.841639</td>
-<td>0.838714</td>
-<td>0.841639</td>
-<td>0.854808</td>
-<td>0.216935</td>
+<td>0.002768</td>
+<td>0.838891</td>
+<td>0.836077</td>
+<td>0.838891</td>
+<td>0.852196</td>
+<td>0.219058</td>
 </tr>
 <tr>
 <th>KNN</th>
-<td>0.148745</td>
-<td>0.843012</td>
-<td>0.842635</td>
-<td>0.843012</td>
-<td>0.842990</td>
-<td>0.215811</td>
+<td>0.142188</td>
+<td>0.834145</td>
+<td>0.833733</td>
+<td>0.834145</td>
+<td>0.834076</td>
+<td>0.227051</td>
 </tr>
 </tbody>
 </table>
@@ -10092,60 +10597,16 @@ Training KNN complete time taken: 0.15 seconds
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [43]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
-    <span class="n">results_df</span><span class="p">,</span>
-    <span class="n">x</span><span class="o">=</span><span class="n">results_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
-    <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="s1">'train_accuracy'</span><span class="p">,</span> <span class="s1">'train_f1'</span><span class="p">,</span> <span class="s1">'train_recall'</span><span class="p">,</span> <span class="s1">'train_precision'</span><span class="p">,</span> <span class="s1">'mean_absolute_error'</span><span class="p">],</span>
-    <span class="n">title</span><span class="o">=</span><span class="s2">"Model Training Metrics"</span><span class="p">,</span>
-    <span class="n">barmode</span><span class="o">=</span><span class="s1">'group'</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
-<iframe allowfullscreen="" frameborder="0" height="545px" scrolling="no" src="iframe_figures/figure_43.html" width="100%"></iframe>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In [44]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
-    <span class="n">x</span><span class="o">=</span><span class="n">results_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
-    <span class="n">y</span><span class="o">=</span><span class="n">results_df</span><span class="p">[</span><span class="s1">'train_time'</span><span class="p">],</span>
-    <span class="n">title</span><span class="o">=</span><span class="s1">'Training Time'</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="n">results_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+    <span class="n">results_df</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">results_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'train_time'</span><span class="p">),</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">results_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">"Model Training Metrics"</span><span class="p">,</span>
+    <span class="n">barmode</span><span class="o">=</span><span class="s1">'group'</span><span class="p">,</span>
 <span class="p">)</span>
-
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">results_df</span><span class="p">)):</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">add_annotation</span><span class="p">(</span>
-        <span class="n">x</span><span class="o">=</span><span class="n">results_df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
-        <span class="n">y</span><span class="o">=</span><span class="n">results_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">'train_time'</span><span class="p">],</span>
-        <span class="n">text</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">results_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">'train_time'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> s"</span><span class="p">,</span>
-        <span class="n">yshift</span><span class="o">=-</span><span class="mi">10</span><span class="p">,</span>
-        <span class="n">showarrow</span><span class="o">=</span><span class="kc">False</span>
-    <span class="p">)</span>
-
-<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">yaxis_title</span><span class="o">=</span><span class="s1">'Time (s)'</span><span class="p">,</span> <span class="n">xaxis_title</span><span class="o">=</span><span class="s1">'Model'</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -10173,9 +10634,52 @@ Training KNN complete time taken: 0.15 seconds
 <div class="jp-InputPrompt jp-InputArea-prompt">In [45]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">results_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">results_df</span><span class="p">[</span><span class="s1">'train_time'</span><span class="p">],</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">'Training Time'</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="n">results_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">results_df</span><span class="p">)):</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">add_annotation</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">results_df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">results_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">'train_time'</span><span class="p">],</span>
+        <span class="n">text</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">results_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">'train_time'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> s"</span><span class="p">,</span>
+        <span class="n">yshift</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">showarrow</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">yaxis_title</span><span class="o">=</span><span class="s1">'Time (s)'</span><span class="p">,</span> <span class="n">xaxis_title</span><span class="o">=</span><span class="s1">'Model'</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<iframe allowfullscreen="" frameborder="0" height="545px" scrolling="no" src="iframe_figures/figure_45.html" width="100%"></iframe>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [46]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">make_subplots</span><span class="p">(</span><span class="n">rows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">subplot_titles</span><span class="o">=</span><span class="n">results_df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
 
-<span class="c1"># plotting the confusion matrix</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">confusion_matrices</span><span class="p">):</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
         <span class="n">go</span><span class="o">.</span><span class="n">Heatmap</span><span class="p">(</span>
@@ -10208,7 +10712,7 @@ Training KNN complete time taken: 0.15 seconds
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
-<iframe allowfullscreen="" frameborder="0" height="545px" scrolling="no" src="iframe_figures/figure_45.html" width="100%"></iframe>
+<iframe allowfullscreen="" frameborder="0" height="545px" scrolling="no" src="iframe_figures/figure_46.html" width="100%"></iframe>
 </div>
 </div>
 </div>
@@ -10220,45 +10724,37 @@ Training KNN complete time taken: 0.15 seconds
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Model-Comparision-Results">Model Comparision Results<a class="anchor-link" href="#Model-Comparision-Results">¶</a></h3><h4 id="Top-Performers">Top Performers<a class="anchor-link" href="#Top-Performers">¶</a></h4><ol>
-<li><p>Random Forest:</p>
-<ul>
-<li>Highest accuracy (90.99%)</li>
-<li>Best F1 score (90.96%)</li>
-<li>Lowest MAE (0.126)</li>
+<h3 id="Random-Forest">Random Forest<a class="anchor-link" href="#Random-Forest">¶</a></h3><ul>
+<li>Strong overall performance with excellent accuracy in all classes</li>
+<li>The strongest model for the Medium class (1820 correct)</li>
+<li>Very few severe misclassifications (only 76 High predicted as Low)</li>
 </ul>
-</li>
-<li><p>SVM:</p>
-<ul>
-<li>Very close second with 90.87% accuracy</li>
-<li>Slightly higher MAE (0.125)</li>
-<li>Much slower training time (7.03s vs 2.03s)</li>
+<h3 id="Gradient-Boosting">Gradient Boosting<a class="anchor-link" href="#Gradient-Boosting">¶</a></h3><ul>
+<li>Slightly better than Random Forest for the Low class (1824 correct)</li>
+<li>Excellent Medium class performance (1803 correct)</li>
+<li>Balanced error distribution with minimal severe errors</li>
 </ul>
-</li>
-<li><p>Gradient Boosting:</p>
-<ul>
-<li>Solid third place with 90.63% accuracy</li>
-<li>Comparable MAE (0.129)</li>
-<li>Slowest training time (6.54s)</li>
+<h3 id="SVM">SVM<a class="anchor-link" href="#SVM">¶</a></h3><ul>
+<li>Excellent High class performance (3687 correct)</li>
+<li>Very strong balance across all classes</li>
+<li>Similar pattern to Random Forest but slightly lower Medium accuracy</li>
 </ul>
-</li>
-</ol>
-<h4 id="Lower-Performers">Lower Performers<a class="anchor-link" href="#Lower-Performers">¶</a></h4><ol start="4">
-<li><p>KNN &amp; Naive Bayes:</p>
-<ul>
-<li>Similar accuracy (~84%)</li>
-<li>Higher MAE (~0.216)</li>
-<li>But very fast, especially Naive Bayes (0.003s)</li>
+<h3 id="KNN">KNN<a class="anchor-link" href="#KNN">¶</a></h3><ul>
+<li>Reasonable but weaker performance than the top models</li>
+<li>Struggles more with the Medium class (1586 correct)</li>
+<li>More classification errors, especially between Medium and High classes</li>
 </ul>
-</li>
-<li><p>Logistic Regression:</p>
-<ul>
-<li>Lowest accuracy (82.19%)</li>
-<li>Highest MAE (0.234)</li>
-<li>Relatively fast (0.046s)</li>
+<h3 id="Logistic-Regression">Logistic Regression<a class="anchor-link" href="#Logistic-Regression">¶</a></h3><ul>
+<li>Weakest Medium class performance (1442 correct)</li>
+<li>Significant confusion between Medium and High classes</li>
+<li>Simple model that still performs reasonably on Low class</li>
 </ul>
-</li>
-</ol>
+<h3 id="Naive-Bayes">Naive Bayes<a class="anchor-link" href="#Naive-Bayes">¶</a></h3><ul>
+<li>Strong High class performance (3693 correct, best among all models)</li>
+<li>Weakest for the Medium class (1408 correct)</li>
+<li>Most imbalanced model that favors the High class predictions</li>
+</ul>
+<p>Overall, Random Forest and Gradient Boosting deliver the most balanced and accurate predictions across all three engagement levels, with SVM following closely behind.</p>
 </div>
 </div>
 </div>
@@ -10285,34 +10781,6 @@ Training KNN complete time taken: 0.15 seconds
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [46]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomizedSearchCV</span>
-
-<span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-<span class="n">param_grid</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">'n_estimators'</span><span class="p">:</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">],</span>
-    <span class="s1">'max_depth'</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span>
-    <span class="s1">'min_samples_split'</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
-    <span class="s1">'min_samples_leaf'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
-<span class="p">}</span>
-
-<span class="n">random_forest</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
-<span class="n">random_forest_tuned</span> <span class="o">=</span> <span class="n">RandomizedSearchCV</span><span class="p">(</span><span class="n">random_forest</span><span class="p">,</span> <span class="n">param_grid</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">random_forest_tuned</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<span class="n">y_pred_tuned</span> <span class="o">=</span> <span class="n">random_forest_tuned</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<span class="n">tuning_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
 </div>
 <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
@@ -10320,7 +10788,47 @@ Training KNN complete time taken: 0.15 seconds
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Here we are choosing to fine tune the <code>n_estimators</code>, <code>max_depth</code>, <code>min_samples_leaf</code>, <code>min_samples_leaf</code>.</p>
+<p>Here we are choosing to fine tune the <code>n_estimators</code>, <code>max_depth</code>, <code>min_samples_split</code>, <code>min_samples_leaf</code>.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [47]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomizedSearchCV</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">param_grid</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"n_estimators"</span><span class="p">:</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">],</span>
+    <span class="s2">"max_depth"</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span>
+    <span class="s2">"min_samples_split"</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+    <span class="s2">"min_samples_leaf"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+<span class="p">}</span>
+
+<span class="n">X_combined</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_val</span><span class="p">))</span>
+<span class="n">y_combined</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">y_train</span><span class="p">,</span> <span class="n">y_val</span><span class="p">))</span>
+
+<span class="n">random_forest</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">random_forest_tuned</span> <span class="o">=</span> <span class="n">RandomizedSearchCV</span><span class="p">(</span>
+    <span class="n">random_forest</span><span class="p">,</span>
+    <span class="n">param_grid</span><span class="p">,</span>
+    <span class="n">n_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">random_forest_tuned</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_combined</span><span class="p">,</span> <span class="n">y_combined</span><span class="p">)</span>
+
+<span class="n">y_pred_tuned</span> <span class="o">=</span> <span class="n">random_forest_tuned</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="n">tuning_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+</pre></div>
+</div>
 </div>
 </div>
 </div>
@@ -10329,7 +10837,7 @@ Training KNN complete time taken: 0.15 seconds
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [47]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [48]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">best_params</span> <span class="o">=</span> <span class="n">random_forest_tuned</span><span class="o">.</span><span class="n">best_params_</span>
@@ -10349,9 +10857,53 @@ Training KNN complete time taken: 0.15 seconds
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Best Parameters: {'n_estimators': 200, 'min_samples_split': 2, 'min_samples_leaf': 1, 'max_depth': 30}
-Best Score: 0.9141035957946334
-Tuning Time: 40.52 seconds
+<pre>Best Parameters: {'n_estimators': 200, 'min_samples_split': 5, 'min_samples_leaf': 1, 'max_depth': 20}
+Best Score: 0.9138226774615816
+Tuning Time: 41.39 seconds
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>Now we will re-evaluate the original model with the combined training data as well as the unseen test data</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [49]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">random_forest</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="s1">'Random Forest'</span><span class="p">]</span>
+<span class="n">random_forest</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">y_pred_original</span> <span class="o">=</span> <span class="n">random_forest</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Re-evaluation of the original model time taken: </span><span class="si">{</span><span class="n">end_time</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> seconds"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Re-evaluation of the original model time taken: 1.61 seconds
 </pre>
 </div>
 </div>
@@ -10362,19 +10914,17 @@ Tuning Time: 40.52 seconds
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [48]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [50]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">'Original Random Forest'</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">'time'</span><span class="p">:</span> <span class="n">results</span><span class="p">[</span><span class="s1">'Random Forest'</span><span class="p">][</span><span class="s1">'train_time'</span><span class="p">],</span>
-        <span class="s1">'train_accuracy'</span><span class="p">:</span> <span class="n">results</span><span class="p">[</span><span class="s1">'Random Forest'</span><span class="p">][</span><span class="s1">'train_accuracy'</span><span class="p">],</span>
-        <span class="s1">'train_f1'</span><span class="p">:</span> <span class="n">results</span><span class="p">[</span><span class="s1">'Random Forest'</span><span class="p">][</span><span class="s1">'train_f1'</span><span class="p">],</span>
-        <span class="s1">'train_recall'</span><span class="p">:</span> <span class="n">results</span><span class="p">[</span><span class="s1">'Random Forest'</span><span class="p">][</span><span class="s1">'train_recall'</span><span class="p">],</span>
-        <span class="s1">'train_precision'</span><span class="p">:</span> <span class="n">results</span><span class="p">[</span><span class="s1">'Random Forest'</span><span class="p">][</span><span class="s1">'train_precision'</span><span class="p">]</span>
+        <span class="s1">'train_accuracy'</span><span class="p">:</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_original</span><span class="p">),</span>
+        <span class="s1">'train_f1'</span><span class="p">:</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_original</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s1">'weighted'</span><span class="p">),</span>
+        <span class="s1">'train_recall'</span><span class="p">:</span> <span class="n">recall_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_original</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s1">'weighted'</span><span class="p">),</span>
+        <span class="s1">'train_precision'</span><span class="p">:</span> <span class="n">precision_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_original</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s1">'weighted'</span><span class="p">)</span>
     <span class="p">},</span>
     <span class="s1">'Tuned Random Forest'</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">'time'</span><span class="p">:</span> <span class="n">tuning_time</span><span class="p">,</span>
         <span class="s1">'train_accuracy'</span><span class="p">:</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_tuned</span><span class="p">),</span>
         <span class="s1">'train_f1'</span><span class="p">:</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_tuned</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s1">'weighted'</span><span class="p">),</span>
         <span class="s1">'train_precision'</span><span class="p">:</span> <span class="n">precision_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred_tuned</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s1">'weighted'</span><span class="p">),</span>
@@ -10391,7 +10941,7 @@ Tuning Time: 40.52 seconds
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [49]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [51]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">comparison_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">metrics</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
@@ -10426,7 +10976,6 @@ Tuning Time: 40.52 seconds
 <thead>
 <tr style="text-align: right;">
 <th></th>
-<th>time</th>
 <th>train_accuracy</th>
 <th>train_f1</th>
 <th>train_recall</th>
@@ -10436,19 +10985,17 @@ Tuning Time: 40.52 seconds
 <tbody>
 <tr>
 <th>Original Random Forest</th>
-<td>2.192730</td>
-<td>0.911078</td>
-<td>0.910777</td>
-<td>0.911078</td>
-<td>0.911239</td>
+<td>0.908955</td>
+<td>0.908614</td>
+<td>0.908955</td>
+<td>0.909167</td>
 </tr>
 <tr>
 <th>Tuned Random Forest</th>
-<td>40.515071</td>
-<td>0.912077</td>
-<td>0.911767</td>
-<td>0.912077</td>
-<td>0.912221</td>
+<td>0.910703</td>
+<td>0.910341</td>
+<td>0.910703</td>
+<td>0.910956</td>
 </tr>
 </tbody>
 </table>
@@ -10462,101 +11009,18 @@ Tuning Time: 40.52 seconds
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [50]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
-    <span class="n">comparison_df</span><span class="p">,</span>
-    <span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="s1">'Original Random Forest'</span><span class="p">,</span> <span class="s1">'Tuned Random Forest'</span><span class="p">],</span>
-    <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="s1">'train_accuracy'</span><span class="p">,</span> <span class="s1">'train_f1'</span><span class="p">,</span> <span class="s1">'train_recall'</span><span class="p">,</span> <span class="s1">'train_precision'</span><span class="p">],</span>
-    <span class="n">title</span><span class="o">=</span><span class="s2">"Model Performance Comparison"</span><span class="p">,</span>
-    <span class="n">barmode</span><span class="o">=</span><span class="s1">'group'</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">yaxis_title</span><span class="o">=</span><span class="s2">"Score"</span><span class="p">,</span> <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">"Model"</span><span class="p">)</span>
-
-<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
-<iframe allowfullscreen="" frameborder="0" height="545px" scrolling="no" src="iframe_figures/figure_50.html" width="100%"></iframe>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p><strong>Observing the improvements of the refined model</strong></p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [51]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">improvements</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">comparison_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'time'</span><span class="p">):</span>
-    <span class="n">improvement</span> <span class="o">=</span> <span class="p">((</span><span class="n">comparison_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">metric</span><span class="p">]</span> <span class="o">-</span> <span class="n">comparison_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">metric</span><span class="p">])</span> <span class="o">/</span> <span class="n">comparison_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">metric</span><span class="p">])</span> <span class="o">*</span> <span class="mi">100</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">metric</span><span class="si">}</span><span class="s2"> improvement: </span><span class="si">{</span><span class="n">improvement</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-    <span class="n">improvements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">improvement</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>train_accuracy improvement: 0.10966
-train_f1 improvement: 0.10873
-train_recall improvement: 0.10966
-train_precision improvement: 0.10777
-</pre>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In [52]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">improvement</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-    <span class="s1">'Metric'</span><span class="p">:</span> <span class="n">comparison_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'time'</span><span class="p">),</span>
-    <span class="s1">'Improvement'</span><span class="p">:</span> <span class="n">improvements</span>
-<span class="p">})</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">model_metrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">comparison_df</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="s1">'Model'</span><span class="p">)</span>
 
 <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
-    <span class="n">improvement</span><span class="p">,</span>
-    <span class="n">x</span><span class="o">=</span><span class="s1">'Metric'</span><span class="p">,</span>
-    <span class="n">y</span><span class="o">=</span><span class="s1">'Improvement'</span><span class="p">,</span>
-    <span class="n">title</span><span class="o">=</span><span class="s2">"Model Improvement"</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="s1">'Metric'</span><span class="p">,</span>
+    <span class="n">model_metrics</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s1">'Model'</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="s1">'train_accuracy'</span><span class="p">,</span> <span class="s1">'train_f1'</span><span class="p">,</span> <span class="s1">'train_precision'</span><span class="p">,</span> <span class="s1">'train_recall'</span><span class="p">],</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">'Model Metrics'</span><span class="p">,</span>
+    <span class="n">barmode</span><span class="o">=</span><span class="s1">'group'</span><span class="p">,</span>
+    <span class="n">text_auto</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span>
 
 <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -10584,7 +11048,7 @@ train_precision improvement: 0.10777
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p><strong>Comparing the confusion matrices of old and new models</strong></p>
+<p><strong>Observing the improvements of the refined model</strong></p>
 </div>
 </div>
 </div>
@@ -10594,6 +11058,93 @@ train_precision improvement: 0.10777
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In [53]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">improvements</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">comparison_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+    <span class="n">improvement</span> <span class="o">=</span> <span class="p">((</span><span class="n">comparison_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">metric</span><span class="p">]</span> <span class="o">-</span> <span class="n">comparison_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">metric</span><span class="p">])</span> <span class="o">/</span> <span class="n">comparison_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">metric</span><span class="p">])</span> <span class="o">*</span> <span class="mi">100</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">metric</span><span class="si">}</span><span class="s2"> improvement: </span><span class="si">{</span><span class="n">improvement</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">improvements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">improvement</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>train_accuracy improvement: 0.19236
+train_f1 improvement: 0.19011
+train_recall improvement: 0.19236
+train_precision improvement: 0.19674
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [54]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">improvement</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">'Metric'</span><span class="p">:</span> <span class="n">comparison_df</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span>
+    <span class="s1">'Improvement'</span><span class="p">:</span> <span class="n">improvements</span>
+<span class="p">})</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
+    <span class="n">improvement</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s1">'Metric'</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s1">'Improvement'</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">"Model Improvement"</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s1">'Metric'</span><span class="p">,</span>
+    <span class="n">text</span><span class="o">=</span><span class="s1">'Improvement'</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span><span class="n">texttemplate</span><span class="o">=</span><span class="s1">'%</span><span class="si">{text:.2f}</span><span class="s1">%'</span><span class="p">,</span> <span class="n">textposition</span><span class="o">=</span><span class="s1">'outside'</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<iframe allowfullscreen="" frameborder="0" height="545px" scrolling="no" src="iframe_figures/figure_54.html" width="100%"></iframe>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>Comparing the confusion matrices of old and new models</strong></p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [55]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">make_subplots</span><span class="p">(</span><span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">subplot_titles</span><span class="o">=</span><span class="p">[</span><span class="s1">'Original Random Forest'</span><span class="p">,</span> <span class="s1">'Tuned Random Forest'</span><span class="p">])</span>
@@ -10640,7 +11191,7 @@ train_precision improvement: 0.10777
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
-<iframe allowfullscreen="" frameborder="0" height="545px" scrolling="no" src="iframe_figures/figure_53.html" width="100%"></iframe>
+<iframe allowfullscreen="" frameborder="0" height="545px" scrolling="no" src="iframe_figures/figure_55.html" width="100%"></iframe>
 </div>
 </div>
 </div>
@@ -10652,7 +11203,38 @@ train_precision improvement: 0.10777
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p><strong>Seeing all the best parameters, from our refined model</strong></p>
+<p><strong>Observation</strong>:</p>
+<ol>
+<li><p>Overall Improvement: The tuned model shows modest improvements:</p>
+<ul>
+<li>More correct Medium predictions (1820 vs 1809)</li>
+<li>More correct High predictions (3675 vs 3666)</li>
+<li>Similar Low prediction performance (1797 vs 1796)</li>
+</ul>
+</li>
+<li><p>Error Reduction:</p>
+<ul>
+<li>Medium misclassified as High: Decreased from 195 to 186</li>
+<li>High misclassified as Medium: Decreased from 108 to 101</li>
+<li>Several small improvements across other error types</li>
+</ul>
+</li>
+<li><p>Both models struggle most with the Low-High confusion (197/199 errors)</p>
+</li>
+<li><p>Medium class is better classified by the tuned model</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>Seeing the feature importances</strong></p>
 </div>
 </div>
 </div>
@@ -10661,36 +11243,7 @@ train_precision improvement: 0.10777
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [54]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">best_params</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[54]:</div>
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>{'n_estimators': 200,
- 'min_samples_split': 2,
- 'min_samples_leaf': 1,
- 'max_depth': 30}</pre>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [55]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [56]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">feature_names</span> <span class="o">=</span> <span class="p">[]</span>
@@ -10709,12 +11262,20 @@ train_precision improvement: 0.10777
 <span class="p">)</span>
 
 <span class="n">feature_importance</span> <span class="o">=</span> <span class="n">feature_importance</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">"Importance"</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">feature_importance</span><span class="p">[</span><span class="s2">"ImportancePercent"</span><span class="p">]</span> <span class="o">=</span> <span class="n">feature_importance</span><span class="p">[</span><span class="s2">"Importance"</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span>
 
 <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
     <span class="n">feature_importance</span><span class="p">,</span>
     <span class="n">x</span><span class="o">=</span><span class="s2">"Importance"</span><span class="p">,</span>
     <span class="n">y</span><span class="o">=</span><span class="s2">"Feature"</span><span class="p">,</span>
     <span class="n">title</span><span class="o">=</span><span class="s2">"Feature Importance"</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">"Feature"</span><span class="p">,</span>
+    <span class="n">text</span><span class="o">=</span><span class="s2">"ImportancePercent"</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span>
+    <span class="n">texttemplate</span><span class="o">=</span><span class="s2">"%</span><span class="si">{text:.2f}</span><span class="s2">%"</span><span class="p">,</span>
+    <span class="n">textposition</span><span class="o">=</span><span class="s2">"outside"</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -10730,8 +11291,25 @@ train_precision improvement: 0.10777
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
-<iframe allowfullscreen="" frameborder="0" height="545px" scrolling="no" src="iframe_figures/figure_55.html" width="100%"></iframe>
+<iframe allowfullscreen="" frameborder="0" height="545px" scrolling="no" src="iframe_figures/figure_56.html" width="100%"></iframe>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p><strong>Observation</strong>:</p>
+<ul>
+<li>The most important feature is SessionsPerWeek that means how often a player plays the game determines the engagementlevel</li>
+<li>AvgSessionDuration is close up which means how long they are playing the game</li>
+<li>Moderatley affecting are PlayTimeHours, PlayerLevel, AchievementsUnlocked</li>
+<li>Low importance are the Age and InGamePurchases values</li>
+</ul>
 </div>
 </div>
 </div>
@@ -10745,9 +11323,9 @@ train_precision improvement: 0.10777
 <h1 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion">¶</a></h1><h2 id="Project-Summary-and-Findings">Project Summary and Findings<a class="anchor-link" href="#Project-Summary-and-Findings">¶</a></h2><p>This project analyzed player engagement in online gaming through machine learning classification techniques. Using a dataset of 40,000+ players, we identified key factors that predict engagement levels (Low, Medium, High) and built a robust classification model.</p>
 <p>Our Random Forest classifier achieved 91% accuracy after hyperparameter tuning, successfully distinguishing between engagement levels based primarily on behavioral metrics. The model demonstrated balanced performance across all three engagement categories, with slightly higher accuracy for the Low and High classes.</p>
 <h2 id="Key-Insights">Key Insights<a class="anchor-link" href="#Key-Insights">¶</a></h2><ol>
-<li><strong>Behavioral metrics outweigh demographics</strong>: Time-based metrics (SessionsPerWeek and AvgSessionDurationMinutes) accounted for over 74% of predictive power, while demographic factors like age had limited influence (5%).</li>
-<li><strong>Frequency over duration</strong>: How often players engage with the game (SessionsPerWeek at 43%) is more important than how long they play each session (AvgSessionDurationMinutes at 31%).</li>
-<li><strong>Progress systems matter moderately</strong>: PlayerLevel (6.6%) and AchievementsUnlocked (5.9%) showed moderate importance, indicating achievement systems contribute to engagement but aren't primary drivers.</li>
+<li><strong>Behavioral metrics outweigh demographics</strong>: Time-based metrics (SessionsPerWeek and AvgSessionDurationMinutes) accounted for over 78% of predictive power, while demographic factors like age had limited influence (3.87%).</li>
+<li><strong>Frequency over duration</strong>: How often players engage with the game (SessionsPerWeek at 48%) is more important than how long they play each session (AvgSessionDurationMinutes at 31%).</li>
+<li><strong>Progress systems matter moderately</strong>: PlayerLevel (5.33%) and AchievementsUnlocked (4.92%) showed moderate importance, indicating achievement systems contribute to engagement but aren't primary drivers.</li>
 <li><strong>Purchasing behavior has minimal impact</strong>: In-game purchases showed surprisingly little correlation with engagement levels (&lt;1% importance), challenging conventional monetization-focused strategies.</li>
 </ol>
 <h2 id="Model-Performance">Model Performance<a class="anchor-link" href="#Model-Performance">¶</a></h2><p>Our tuned Random Forest classifier demonstrated excellent performance:</p>
